@@ -1,0 +1,139 @@
+.home-container {
+
+    button {
+        cursor: $cursor-pointer;
+        padding: $padding-5;
+    }
+
+    .home-header {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        background: #e5e5e5;
+        padding: $padding-10;
+
+        .title {
+            @include fontStyles(14px, bold, italic);
+            align-self: center;
+        }
+    }
+
+    .home-body {
+        display: flex;
+        flex-direction: row-reverse;
+
+        .todo-body-parent {
+            flex: 4;
+
+            .add-note-parent {
+                display: flex;
+                justify-content: flex-end;
+
+                .add-note-btn {
+                    
+                    &:before {
+                        content: " + ";
+                        display: flex;
+                        flex-direction: row;
+                        padding-right: 5px; 
+                        font-size: 20px;
+                        font-weight: bold;
+                    }
+
+                    display: flex;
+                    align-items: center;
+                    margin: $margin-10 0;
+                    border: 1px $border-style $border-color;
+                    background: $white-color;
+                    @include borderRadius(5px);
+                }
+            }
+
+            .todo-wrapper {
+                display: flex;
+                flex-direction: column;
+                margin: 5px 15px;
+
+                label {
+                    @include fontStyles(14px, bold, normal);
+                    padding: $padding-5;
+                }
+
+                input {
+                    height: 2em;
+                }
+
+                textarea {
+                    height: 20em;
+                    letter-spacing: 1px;
+                }
+
+                .todo-input {
+                    padding: $padding-5;
+                    line-height: 1.5;
+                    margin-bottom: 10px;
+                    border: 1px $border-style $border-color;
+                    box-shadow: 1px 1px 1px #999;
+                    @include borderRadius(5px);
+                }
+
+                .save-note-parent {
+                    display: flex;
+                    justify-content: flex-end;
+
+                    button {
+                        margin: $margin-10 0;
+                        border: 1px $border-style $border-color;
+                        background: #00BCD4;
+                        color: $white-color;
+                        @include borderRadius(5px);
+                    }
+                }
+            }
+        }
+
+        .todo-list {
+            flex: 1;
+            height: $common-vh;
+            border-right: 1px $border-style $border-color;
+
+            .todo-list-wrapper {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                padding: $padding-5;
+                border: 1px $border-style $border-color;
+                border-right: 0;
+
+                .todo-list-content {
+                    padding: $padding-5;
+
+                    .todo-list-title {
+                        @include fontStyles(14px, bold, italic);
+                        color: #6d5f5f;
+                    }
+    
+                    .todo-list-body {
+                        @include fontStyles(13px, normal, normal);
+                        word-break: break-word;
+                        text-align: justify;
+                        color: #9E9E9E;
+                    }
+                }
+
+                .close-btn {
+                    background: none;
+                    border: 0;
+                    align-self: center;
+
+                    &:after {
+                        content: "\00d7";
+                        color: #ae9e9ef0;
+                        font-weight: bold;
+                        font-size: 18px;
+                    }
+                }
+            }
+        }
+    }
+}

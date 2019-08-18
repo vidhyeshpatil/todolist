@@ -1,0 +1,29 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    height: $common-vh;
+
+    &.login-container {    
+        .wrapper {
+            display: flex;
+            flex-direction: column;
+            padding: $padding-10;
+            border: 1px $border-style $border-color;
+        }
+    
+        input {
+            width: 300px;
+            margin: $margin-10;
+            padding: $padding-10;
+        }
+    
+        button {
+            margin: $margin-10;
+            padding: $padding-10;
+            cursor: $cursor-pointer;
+        }
+    }
+}
