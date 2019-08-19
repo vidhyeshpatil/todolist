@@ -28,10 +28,15 @@ export default function LoginPage({ history }) {
         dispatch(triggerLoginAPI({email, password}));
     }
 
-    useEffect(() => {
+    function reDirectToHome() {
         // if user is valid it routes to different screen
         (isLoggedIn) && history.push("/home");
-    }, [isLoggedIn]);
+    }
+
+    // to solve react exhaustive-deps lint rule, need to add dependency using useCallback method
+    const initHome = useCallback(reDirectToHome, [isLoggedIn]);
+
+    useEffect(() => initHome(), [initHome]);
 
     return (
         <form onSubmit = {triggerLogin}>
