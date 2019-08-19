@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import React, { useState, useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { resetLoginStatus } from '../../redux/actions';
 import ToDoForm from '../../components/ToDoForm';
 import ToDoList from '../../components/ToDoForm/ToDoList';
@@ -17,15 +16,26 @@ const useToDoForm = initialValue => {
     }
 }
 
-function HomePage({ history, todoList, resetLoginStatus }) {
+export default function HomePage({ history }) {
     const { isToDoFormRender, showToDoForm, hideToDoForm } = useToDoForm(false);
 
-    function setToLogin() {
+    // dispatch hook - approx. equivalent to mapDispatchToProps
+    const dispatch = useDispatch();
 
-        // logout & reset the status
-        resetLoginStatus();
+    // allow to extract data from the redux store state - approx. equivalent to mapStateToProps
+    const { todoList } = useSelector(state => state.todoReducer);
 
-        // route to login screen
+    // memoize with callback to avoid unnecessary render, due to change reference
+    const setToLogin = useCallback(
+        logout,
+        [dispatch]
+    );
+
+    function logout() {
+        // action trigger
+        dispatch(resetLoginStatus());
+
+        // routes to login screen
         history.push("/login");
     }
 
@@ -45,31 +55,10 @@ function HomePage({ history, todoList, resetLoginStatus }) {
                 <ToDoList todoList = {todoList} />
             </div>
         </div>
-    )
+    );
 }
-
-function mapStateToProps(state) {
-    return {
-        todoList: state.todoReducer.todoList,
-    };
-}
-
-function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ resetLoginStatus }, dispatch);
-}
-
-const Home = connect(mapStateToProps, mapDispatchToProps)(HomePage)
 
 // props validation
-Home.propTypes = {
+HomePage.propTypes = {
     history: PropTypes.object,
-    todoList: PropTypes.arrayOf(
-        PropTypes.shape({
-            title: PropTypes.string,
-            body: PropTypes.string,
-        })
-    ),
-    resetLoginStatus: PropTypes.func
 }
-
-export default Home;

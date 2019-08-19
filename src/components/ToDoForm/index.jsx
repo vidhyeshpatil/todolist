@@ -1,12 +1,20 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import React, { useCallback } from 'react';
+import { useDispatch } from 'react-redux';
 import { updateToDoList } from '../../redux/actions';
 import PropTypes from 'prop-types';
 
-function ToDoForm({updateToDoList, hideToDoForm}) {
+export default function ToDoForm({ hideToDoForm }) {
 
-    function saveToDo(e) {
+    // dispatch hook - approx. equivalent to mapDispatchToProps
+    const dispatch = useDispatch();
+
+    // memoize with callback to avoid unnecessary render, due to change reference
+    const saveToDo = useCallback(
+        saveToDoNote,
+        [dispatch]
+    );
+
+    function saveToDoNote(e) {
         e.preventDefault();
 
         const title = e.target.todoTitle.value;
@@ -16,7 +24,7 @@ function ToDoForm({updateToDoList, hideToDoForm}) {
         if (title.length > 1 && body.length > 1) {
             
             // dispatch an action to update the data in reducer
-            updateToDoList({title, body});
+            dispatch(updateToDoList({title, body}));
 
             // hide todo form once note is added to todo list
             hideToDoForm();
@@ -43,19 +51,10 @@ function ToDoForm({updateToDoList, hideToDoForm}) {
                 </div>
             </div>
         </form>
-    )
+    );
 }
-
-function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ updateToDoList }, dispatch);
-}
-
-const Form = connect(null, mapDispatchToProps)(ToDoForm)
 
 // props validation
-Form.propTypes = {
+ToDoForm.propTypes = {
     hideToDoForm: PropTypes.func,
-    updateToDoList: PropTypes.func,
 }
-
-export default Form;

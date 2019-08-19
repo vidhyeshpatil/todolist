@@ -1,15 +1,23 @@
-import React from 'react';
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
+import React, {useCallback} from 'react';
+import { useDispatch } from "react-redux";
 import { removeToDoItem } from "../../redux/actions";
 import PropTypes from 'prop-types';
 
-function ToDoItem({item, itemIndex, removeToDoItem}) {
+export default function ToDoItem({item, itemIndex}) {
 
-    function removeToDoListItem() {
+    // dispatch hook - approx. equivalent to mapDispatchToProps
+    const dispatch = useDispatch();
+
+    // memoize with callback to avoid unnecessary render, due to change reference
+    const removeToDoListItem = useCallback(
+        removeItem,
+        [dispatch]
+    );
+
+    function removeItem() {
 
         // dispatching an action remove todo item from the list
-        removeToDoItem(itemIndex);
+        dispatch(removeToDoItem(itemIndex));
     }
 
     return (
@@ -23,20 +31,11 @@ function ToDoItem({item, itemIndex, removeToDoItem}) {
     );
 } 
 
-function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ removeToDoItem }, dispatch);
-}
-
-const Item = connect(null, mapDispatchToProps)(ToDoItem);
-
 // props validation
-Item.propTypes = {
+ToDoItem.propTypes = {
     item: PropTypes.shape({
         title: PropTypes.string,
         body: PropTypes.string
     }),
     itemIndex: PropTypes.number,
-    removeToDoItem: PropTypes.func
 }
-
-export default Item;

@@ -1,66 +1,62 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import React, { useCallback, useEffect} from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { triggerLoginAPI } from '../../redux/actions';
 import ErrorMessage from '../../components/ErrorMessage';
+import PropTypes from 'prop-types';
 
-class LoginPage extends React.Component {
+export default function LoginPage({ history }) {
     
-    triggerLogin = e => {
+    // dispatch hook - approx. equivalent to mapDispatchToProps
+    const dispatch = useDispatch();
+
+    // allow to extract data from the redux store state - approx. equivalent to mapStateToProps
+    const {isLoggedIn, loginErrorMsg} = useSelector(state => state.loginReducer);
+
+    const triggerLogin = useCallback(
+        initLogin,
+        [dispatch]
+    );
+
+    function initLogin(e) {
         // prevents default behaviour
         e.preventDefault();
 
         const email = e.target.email.value;
         const password = e.target.password.value;
         
-        // trigger login api
-        this.props.triggerLoginAPI({email, password});
+        // trigger login action
+        dispatch(triggerLoginAPI({email, password}));
     }
 
-    componentDidUpdate() {
+    useEffect(() => {
+        // if user is valid it routes to different screen
+        (isLoggedIn) && history.push("/home");
+    }, [isLoggedIn]);
 
-        // routes to different screen
-        (this.props.isLoggedIn) && this.props.history.push("/home");
-    }
-
-    render() {
-        const { loginErrorMsg } = this.props;
-
-        return (
-            <form onSubmit = {this.triggerLogin}>
-                <div className = "container login-container">
-                    <div className = "wrapper"> 
-                        <h2> --> My TO-DO List</h2>
-                            <input 
-                                type = "email"
-                                name = "email"
-                                placeholder = "Enter your e-mail address"
-                            />
-                            <input 
-                                type = "password"
-                                name = "password"
-                                placeholder = "Enter your password"
-                            />
-                            <ErrorMessage msg={loginErrorMsg} />
-                            <button type = "submit">Login</button>
-                    </div>
+    return (
+        <form onSubmit = {triggerLogin}>
+            <div className = "container login-container">
+                <div className = "wrapper"> 
+                    <h2> --> My TO-DO List</h2>
+                        <input 
+                            type = "email"
+                            name = "email"
+                            placeholder = "Enter your e-mail address"
+                        />
+                        <input 
+                            type = "password"
+                            name = "password"
+                            placeholder = "Enter your password"
+                        />
+                        <ErrorMessage msg={loginErrorMsg} />
+                        <button type = "submit">Login</button>
                 </div>
-            </form>
-        );
-    }
+            </div>
+        </form>
+    );
 }
 
-function mapStateToProps(state) {
-    return {
-        isLoggedIn: state.loginReducer.isLoggedIn,
-        loginErrorMsg: state.loginReducer.loginErrorMsg,
-    };
+// props validation
+LoginPage.propTypes = {
+    history: PropTypes.object,
 }
-
-function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ triggerLoginAPI }, dispatch);
-}
-
-const Login = connect(mapStateToProps, mapDispatchToProps)(LoginPage);
-
-export default Login;
