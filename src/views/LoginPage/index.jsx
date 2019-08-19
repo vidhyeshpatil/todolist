@@ -6,11 +6,6 @@ import ErrorMessage from '../../components/ErrorMessage';
 
 class LoginPage extends React.Component {
     
-    state = {
-        emailErrorMsg: '',
-        passwordErrorMsg: ''
-    }
-
     triggerLogin = e => {
         // prevents default behaviour
         e.preventDefault();
